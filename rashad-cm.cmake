@@ -80,4 +80,4 @@ if(NOT dashboard_no_test)
 endif()
 
 #submit to dashboard
-#ctest_submit()
+ctest_submit()
