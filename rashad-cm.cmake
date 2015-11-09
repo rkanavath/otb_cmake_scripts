@@ -41,6 +41,7 @@ CMAKE_CXX_COMPILER=$ENV{CXX}
 CMAKE_C_FLAGS:STRING=-Wall -Wno-uninitialized  -Wno-unused-variable -Wno-gnu
 CMAKE_CXX_FLAGS:STRING=-Wall -Wno-deprecated -Wno-uninitialized -Wno-gnu -Wno-overloaded-virtual -Wno-cpp -Wno-unused-parameter
 CMAKE_PREFIX_PATH:PATH=$ENV{XDK_DIR}
+CMAKE_MAKE_PROGRAM:STRING=/tmp/ninja
 CMAKE_INSTALL_PREFIX=${CTEST_DASHBOARD_ROOT}/orfeotoolbox/install
 BUILD_TESTING:BOOL=OFF
 BUILD_EXAMPLES:BOOL=OFF
