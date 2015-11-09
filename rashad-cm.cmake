@@ -1,4 +1,5 @@
-#before running this script you need to set the below enviroment variables
+#rashad-cm.cmake - custom cmake scripts for travis build
+#before running this script you need to set the below env variables
 #export CC=/usr/local/bin/clang
 #export CXX=/usr/local/bin/clang++
 #export CMAKE_CMD=/usr/local/bin/cmake
@@ -8,20 +9,27 @@ set(ENV{LC_ALL} C)
 
 set(CTEST_SITE "travis-ci.org")
 set(CTEST_DASHBOARD_TRACK Continuous)
-
+set(CTEST_DASHBOARD_ROOT "/home/travis/build")
 set(CTEST_DASHBOARD_ROOT "/tmp/temp")
 set(CTEST_SOURCE_DIRECTORY "${CTEST_DASHBOARD_ROOT}/orfeotoolbox/OTB")
 set(CTEST_BINARY_DIRECTORY "${CTEST_DASHBOARD_ROOT}/orfeotoolbox/build")
-
-set(GIT_BRANCH "develop")
-set(CTEST_BUILD_NAME "travis-${CTEST_DASHBOARD_TRACK}-${GIT_BRANCH}")
-
 set(CTEST_CMAKE_GENERATOR "Ninja")
-set(CMAKE_MAKE_PROGRAM "/tmp/ninja")
-set(CTEST_COMMAND "$ENV{CMAKE_CMD}")
+set(CMAKE_MAKE_PROGRAM "$ENV{MAKE_CMD}")
+set(CTEST_COMMAND "/tmp/ninja")
 set(CTEST_USE_LAUNCHERS ON)
 set(CTEST_BUILD_COMMAND "${CMAKE_MAKE_PROGRAM}" )
 set(CTEST_CMAKE_GENERATOR "Ninja")
+
+execute_process(COMMAND "${CMAKE_COMMAND}" -E chdir ${CTEST_SOURCE_DIRECTORY} "git" "branch" OUTPUT_VARIABLE _GIT_BRANCH RESULT_VARIABLE rv)
+if(NOT rv EQUAL 0)
+  message(FATAL_ERROR "cannot find git branch")
+  set(GIT_BRANCH "develop")
+else()
+  string(SUBSTRING "${_GIT_BRANCH}" 2 -1 GIT_BRANCH)
+  message(STATUS "git branch:   ${GIT_BRANCH}")
+endif()
+
+set(CTEST_BUILD_NAME "travis-${CTEST_DASHBOARD_TRACK}-${GIT_BRANCH}")
 
 #set(CTEST_TEST_ARGS INCLUDE_LABEL "")
 
@@ -38,6 +46,7 @@ BUILD_EXAMPLES:BOOL=OFF
 ")
 
 
+#write CMakeCache.txt
 file(WRITE ${CTEST_BINARY_DIRECTORY}/CMakeCache.txt "
 SITE:STRING=${CTEST_SITE}
 BUILDNAME:STRING=${CTEST_BUILD_NAME}
@@ -46,34 +55,28 @@ DART_TESTING_TIMEOUT:STRING=${CTEST_TEST_TIMEOUT}
 ${dashboard_cache}
 ")
 
-
-
+#disable tests
 set(dashboard_no_test TRUE)
 
-
-
-
-
-
-
-
-
-
+#empty binary directory
 ctest_empty_binary_directory(${CTEST_BINARY_DIRECTORY})
 
+#call ctest_start
 ctest_start(${CTEST_DASHBOARD_TRACK} TRACK ${CTEST_DASHBOARD_TRACK})
 
+#run configure
 ctest_configure()
 
+#read custom files
 ctest_read_custom_files(${CTEST_BINARY_DIRECTORY})
 
+#build OTB
+ctest_build()
 
-# ctest_build()
-
-# if(NOT dashboard_no_test)
-#    ctest_test(${CTEST_TEST_ARGS})
-# endif()
-
-if(NOT dashboard_no_submit)
-  ctest_submit()
+#run test if asked explicitly
+if(NOT dashboard_no_test)
+    ctest_test(${CTEST_TEST_ARGS})
 endif()
+
+#submit to dashboard
+#ctest_submit()
