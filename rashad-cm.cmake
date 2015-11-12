@@ -10,8 +10,8 @@ set(ENV{LC_ALL} C)
 set(CTEST_SITE "travis-ci.org")
 set(CTEST_DASHBOARD_TRACK Continuous)
 set(CTEST_BUILD_CONFIGURATION Release)
-set(CTEST_DASHBOARD_ROOT "/home/travis/build")
-#set(CTEST_DASHBOARD_ROOT "/tmp/temp")
+#set(CTEST_DASHBOARD_ROOT "/home/travis/build")
+set(CTEST_DASHBOARD_ROOT "/tmp/temp")
 set(CTEST_SOURCE_DIRECTORY "${CTEST_DASHBOARD_ROOT}/orfeotoolbox/OTB")
 set(CTEST_BINARY_DIRECTORY "${CTEST_DASHBOARD_ROOT}/orfeotoolbox/build")
 set(CMAKE_MAKE_PROGRAM "$ENV{MAKE_CMD}")
@@ -23,6 +23,7 @@ set(CTEST_DROP_METHOD "http")
 set(CTEST_DROP_SITE "dash.orfeo-toolbox.org")
 set(CTEST_DROP_LOCATION "/submit.php?project=OTB")
 set(CTEST_DROP_SITE_CDASH TRUE)
+set(CTEST_TEST_TIMEOUT 1500)
 
 set(CTEST_USE_LAUNCHERS TRUE)
 
@@ -37,23 +38,28 @@ string(REGEX REPLACE ".detached.from.*\\)" "" GIT_BRANCH ${GIT_BRANCH})
 endif()
 set(CTEST_BUILD_NAME "travis-${GIT_BRANCH}")
 
+set(OTB_C_FLAGS "-DCMAKE_C_FLAGS:STRING=-Wall -Wno-gnu -Wno-uninitialized  -Wno-unused-variable")
+list(APPEND OTB_C_FLAGS  "-DCMAKE_CXX_FLAGS:STRING=-Wall  -Wno-gnu -Wno-deprecated -Wno-uninitialized -Wno-overloaded-virtual -Wno-unused-parameter")
 
 #set(CTEST_TEST_ARGS INCLUDE_LABEL "")
 
 set(cmake_configure_options "
-SITE:STRING=${CTEST_SITE}
-BUILDNAME:STRING=${CTEST_BUILD_NAME}
-CTEST_USE_LAUNCHERS:BOOL=${CTEST_USE_LAUNCHERS}
-DART_TESTING_TIMEOUT:STRING=${CTEST_TEST_TIMEOUT}
-CMAKE_BUILD_TYPE:STRING=${CTEST_BUILD_CONFIGURATION}
-CMAKE_C_FLAGS:STRING=-Wall -Wno-gnu -Wno-uninitialized  -Wno-unused-variable
-CMAKE_CXX_FLAGS:STRING=-Wall  -Wno-gnu -Wno-deprecated -Wno-uninitialized -Wno-overloaded-virtual -Wno-unused-parameter
-CMAKE_PREFIX_PATH:PATH=/tmp/OTB-xdk-Linux64
-CMAKE_INSTALL_PREFIX=${CTEST_DASHBOARD_ROOT}/orfeotoolbox/install
-BUILD_EXAMPLES:BOOL=OFF
-")
+SITE:STRING=${CTEST_SITE}"
+"BUILDNAME:STRING=${CTEST_BUILD_NAME}"
+"CTEST_USE_LAUNCHERS:BOOL=${CTEST_USE_LAUNCHERS}"
+"DART_TESTING_TIMEOUT:STRING=${CTEST_TEST_TIMEOUT}"
+"CMAKE_BUILD_TYPE:STRING=${CTEST_BUILD_CONFIGURATION}"
+"CMAKE_PREFIX_PATH:PATH=/tmp/OTB-xdk-Linux64"
+"CMAKE_INSTALL_PREFIX=${CTEST_DASHBOARD_ROOT}/orfeotoolbox/install"
+"BUILD_EXAMPLES:BOOL=OFF"
+"BUILD_TESTING:BOOL=ON")
 
 #OTB_DATA_ROOT:STRING=${CTEST_DASHBOARD_ROOT}/otb-data
+
+set(cmake_configure_option_list)
+foreach(opt ${cmake_configure_options})
+  list(APPEND cmake_configure_option_list "-D${opt}")
+endforeach()
 
 #disable tests
 set(dashboard_no_test TRUE)
@@ -64,12 +70,10 @@ ctest_empty_binary_directory(${CTEST_BINARY_DIRECTORY})
 #call ctest_start
 ctest_start(${CTEST_DASHBOARD_TRACK} TRACK ${CTEST_DASHBOARD_TRACK})
 
-#i dont know.. convert string to list?
-set(cmake_configure_option_list "${cmake_configure_options}")
 #run configure
 ctest_configure(BUILD ${CTEST_BINARY_DIRECTORY}
   SOURCE ${CTEST_SOURCE_DIRECTORY}
-  OPTIONS ${cmake_configure_option_list})
+  OPTIONS ${cmake_configure_option_list} ${OTB_C_FLAGS})
 
 #read custom files
 ctest_read_custom_files(${CTEST_BINARY_DIRECTORY})
