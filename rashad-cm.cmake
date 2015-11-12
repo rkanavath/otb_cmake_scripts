@@ -65,10 +65,12 @@ ctest_empty_binary_directory(${CTEST_BINARY_DIRECTORY})
 #call ctest_start
 ctest_start(${CTEST_DASHBOARD_TRACK} TRACK ${CTEST_DASHBOARD_TRACK})
 
+#i dont know.. convert string to list?
+set(cmake_configure_option_list "${cmake_configure_options}")
 #run configure
 ctest_configure(BUILD ${CTEST_BINARY_DIRECTORY}
   SOURCE ${CTEST_SOURCE_DIRECTORY}
-  OPTIONS "${cmake_configure_options}")
+  OPTIONS ${cmake_configure_option_list})
 
 #read custom files
 ctest_read_custom_files(${CTEST_BINARY_DIRECTORY})
