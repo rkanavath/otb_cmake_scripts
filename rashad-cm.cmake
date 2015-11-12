@@ -15,10 +15,20 @@ set(CTEST_DASHBOARD_ROOT "/home/travis/build")
 set(CTEST_SOURCE_DIRECTORY "${CTEST_DASHBOARD_ROOT}/orfeotoolbox/OTB")
 set(CTEST_BINARY_DIRECTORY "${CTEST_DASHBOARD_ROOT}/orfeotoolbox/build")
 #set(CMAKE_MAKE_PROGRAM /tmp/ninja)
-#set(CMAKE_COMMAND "$ENV{CMAKE_CMD}")
-set(CTEST_USE_LAUNCHERS OFF)
+set(CMAKE_COMMAND "$ENV{CMAKE_CMD}")
+#set(CTEST_USE_LAUNCHERS OFF)
 #set(CTEST_BUILD_COMMAND "${CMAKE_MAKE_PROGRAM}")
 set(CTEST_CMAKE_GENERATOR "Unix Makefiles")
+
+
+set(CTEST_NIGHTLY_START_TIME "20:00:00 CEST")
+set(CTEST_DROP_METHOD "http")
+set(CTEST_DROP_SITE "dash.orfeo-toolbox.org")
+set(CTEST_DROP_LOCATION "/submit.php?project=OTB")
+set(CTEST_DROP_SITE_CDASH TRUE)
+
+set(CTEST_USE_LAUNCHERS TRUE)
+
 
 execute_process(COMMAND "${CMAKE_COMMAND}" -E chdir ${CTEST_SOURCE_DIRECTORY} "git" "rev-parse" "--abbrev-ref" "HEAD" OUTPUT_VARIABLE GIT_BRANCH RESULT_VARIABLE rv)
 if(NOT rv EQUAL 0)
@@ -51,7 +61,7 @@ BUILD_EXAMPLES:BOOL=OFF
 set(dashboard_no_test TRUE)
 
 #empty binary directory
-ctest_empty_binary_directory(${CTEST_BINARY_DIRECTORY})
+#ctest_empty_binary_directory(${CTEST_BINARY_DIRECTORY})
 
 #call ctest_start
 ctest_start(${CTEST_DASHBOARD_TRACK} TRACK ${CTEST_DASHBOARD_TRACK})
@@ -63,7 +73,7 @@ ctest_configure()
 ctest_read_custom_files(${CTEST_BINARY_DIRECTORY})
 
 #build OTB
-ctest_build()
+#ctest_build()
 
 #run test if asked explicitly
 if(NOT dashboard_no_test)
