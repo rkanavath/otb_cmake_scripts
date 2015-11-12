@@ -52,14 +52,10 @@ CMAKE_C_FLAGS:STRING=-Wall -Wno-uninitialized  -Wno-unused-variable
 CMAKE_CXX_FLAGS:STRING=-Wall -Wno-deprecated -Wno-uninitialized -Wno-overloaded-virtual -Wno-cpp -Wno-unused-parameter
 CMAKE_PREFIX_PATH:PATH=/tmp/OTB-xdk-Linux64
 CMAKE_INSTALL_PREFIX=${CTEST_DASHBOARD_ROOT}/orfeotoolbox/install
-BUILD_TESTING:BOOL=ON
-DOTB_BUILD_DEFAULT_MODULES:BOOL=OFF
-OTBGroup_ThirdParty:BOOL=ON
-OTB_USE_6S:BOOL=OFF
-OTB_USE_SIFTFAST:BOOL=OFF
 BUILD_EXAMPLES:BOOL=OFF
 #OTB_DATA_ROOT:STRING=${CTEST_DASHBOARD_ROOT}/otb-data
 ")
+
 
 #disable tests
 set(dashboard_no_test TRUE)
@@ -71,7 +67,9 @@ ctest_empty_binary_directory(${CTEST_BINARY_DIRECTORY})
 ctest_start(${CTEST_DASHBOARD_TRACK} TRACK ${CTEST_DASHBOARD_TRACK})
 
 #run configure
-ctest_configure()
+ctest_configure(BUILD ${CTEST_BINARY_DIRECTORY}
+  SOURCE ${CTEST_SOURCE_DIRECTORY}
+  OPTIONS "-DCMAKE_PREFIX_PATH:PATH=/tmp/OTB-xdk-Linux64 -DBUILD_TESTING:BOOL=ON -DCMAKE_CXX_FLAGS='-w' -DOTB_BUILD_DEFAULT_MODULES:BOOL=OFF -DOTBGroup_ThirdParty:BOOL=ON -DOTB_USE_6S:BOOL=OFF -DOTB_USE_SIFTFAST:BOOL=OFF")
 
 #read custom files
 ctest_read_custom_files(${CTEST_BINARY_DIRECTORY})
