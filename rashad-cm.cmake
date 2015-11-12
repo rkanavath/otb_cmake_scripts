@@ -68,7 +68,7 @@ ctest_configure(BUILD ${CTEST_BINARY_DIRECTORY}
 ctest_read_custom_files(${CTEST_BINARY_DIRECTORY})
 
 #build OTB
-#ctest_build()
+ctest_build()
 
 #run test if asked explicitly
 if(NOT dashboard_no_test)
