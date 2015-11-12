@@ -54,7 +54,7 @@ endforeach()
 set(dashboard_no_test TRUE)
 
 #empty binary directory
-ctest_empty_binary_directory(${CTEST_BINARY_DIRECTORY})
+#ctest_empty_binary_directory(${CTEST_BINARY_DIRECTORY})
 
 #call ctest_start
 ctest_start(${CTEST_DASHBOARD_TRACK} TRACK ${CTEST_DASHBOARD_TRACK})
