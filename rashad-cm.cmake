@@ -31,10 +31,6 @@ set(INITIAL_CACHE
 "CMAKE_PREFIX_PATH:PATH=/tmp/OTB-xdk-Linux64
 BUILD_TESTING:BOOL=ON
 CMAKE_MAKE_PROGRAM:FILEPATH=${CMAKE_MAKE_PROGRAM}
-OTB_BUILD_DEFAULT_MODULES:BOOL=OFF
-OTBGroup_ThirdParty:BOOL=ON
-OTB_USE_6S:BOOL=OFF
-OTB_USE_SIFTFAST:BOOL=OFF
 CMAKE_BUILD_TYPE=Release"
 )
 file(WRITE "${CTEST_BINARY_DIRECTORY}/CMakeCache.txt" ${INITIAL_CACHE})
@@ -48,6 +44,6 @@ ctest_submit()
 
 # # indicate errors
 if(NOT _configure_rv EQUAL 0 OR NOT _build_rv EQUAL 0)
-  file(WRITE "$ENV{SOURCE_DIRECTORY}/failed" "build_failed")
+  file(WRITE "${SOURCE_DIRECTORY}/failed" "build_failed")
 endif ()
 
