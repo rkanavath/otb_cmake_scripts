@@ -46,10 +46,6 @@ ctest_start     (Continuous)
 ctest_configure (BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE _configure_rv)
 ctest_build     (BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE _build_rv)
 #ctest_test     (BUILD "${CTEST_BINARY_DIRECTORY}")
-ctest_submit()
-
-# # indicate errors
 if(NOT _configure_rv EQUAL 0 OR NOT _build_rv EQUAL 0)
-  file(WRITE "${CTEST_SOURCE_DIRECTORY}/failed" "build_failed")
+  ctest_submit()
 endif ()
-
