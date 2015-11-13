@@ -44,6 +44,6 @@ ctest_submit()
 
 # # indicate errors
 if(NOT _configure_rv EQUAL 0 OR NOT _build_rv EQUAL 0)
-  file(WRITE "${SOURCE_DIRECTORY}/failed" "build_failed")
+  file(WRITE "${CTEST_SOURCE_DIRECTORY}/failed" "build_failed")
 endif ()
 
