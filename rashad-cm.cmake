@@ -46,6 +46,8 @@ ctest_start     (Continuous)
 ctest_configure (BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE _configure_rv)
 ctest_build     (BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE _build_rv)
 #ctest_test     (BUILD "${CTEST_BINARY_DIRECTORY}")
-if(NOT _configure_rv EQUAL 0 OR NOT _build_rv EQUAL 0)
-  ctest_submit()
-endif ()
+# if(NOT _configure_rv EQUAL 0 OR NOT _build_rv EQUAL 0)
+
+# endif ()
+
+ctest_submit()
