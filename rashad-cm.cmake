@@ -41,13 +41,13 @@ file(WRITE "${CTEST_BINARY_DIRECTORY}/CMakeCache.txt" ${INITIAL_CACHE})
 
 
 ctest_start     (Continuous)
-ctest_configure (BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE _configure_ret)
-ctest_build     (BUILD "${CTEST_BINARY_DIRECTORY}" NUMBER_ERRORS _build_errors NUMBER_WARNINGS _build_warnings)
-#ctest_test      (BUILD "${CTEST_BINARY_DIRECTORY}")
+ctest_configure (BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE _configure_rv)
+ctest_build     (BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE _build_rv)
+#ctest_test     (BUILD "${CTEST_BINARY_DIRECTORY}")
 ctest_submit()
 
-# indicate errors
-if (${_build_errors} GREATER 0 OR ${_build_warnings} GREATER 0 OR NOT ${_configure_ret} EQUAL 0)
+# # indicate errors
+if(NOT _configure_rv EQUAL 0 OR NOT _build_rv EQUAL 0)
   file(WRITE "$ENV{SOURCE_DIRECTORY}/failed" "build_failed")
 endif ()
 
