@@ -35,6 +35,8 @@ OTB_USE_OPENCV:BOOL=ON
 OTB_USE_MUPARSER:BOOL=ON
 OTB_USE_MUPARSERX:BOOL=ON
 OTB_USE_QT4:BOOL=OFF
+CMAKE_C_FLAGS:STRING='-Wno-gnu -Wno-shadow -Wno-unused-parameter'
+CMAKE_CXX_FLAGS:STRING='-Wno-gnu -Wno-shadow -Wno-unused-parameter -Wno-overloaded-virtual'
 CMAKE_BUILD_TYPE=Release"
 )
 file(WRITE "${CTEST_BINARY_DIRECTORY}/CMakeCache.txt" ${INITIAL_CACHE})
