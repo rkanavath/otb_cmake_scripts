@@ -42,9 +42,16 @@ CMAKE_BUILD_TYPE=Release"
 file(WRITE "${CTEST_BINARY_DIRECTORY}/CMakeCache.txt" ${INITIAL_CACHE})
 
 ctest_start     (Continuous)
+ctest_update    (SOURCE ${CTEST_SOURCE_DIRECTORY} RETURN_VALUE _update_rv)
+
+message(STATUS "Found ${_update_rv} changed files")
+
 ctest_configure (BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE _configure_rv)
+ctest_read_custom_files(${CTEST_BINARY_DIRECTORY})
+
 ctest_build     (BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE _build_rv)
-ctest_test      (BUILD "${CTEST_BINARY_DIRECTORY}" INCLUDE coTu RETURN_VALUE _test_rv)
+
+ctest_test      (BUILD "${CTEST_BINARY_DIRECTORY}" INCLUDE Tu RETURN_VALUE _test_rv)
 # if(NOT _configure_rv EQUAL 0 OR NOT _build_rv EQUAL 0)
 # endif ()
 
